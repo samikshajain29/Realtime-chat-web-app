@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { serverUrl } from "../main";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserData } from "../redux/userSlice";
 
 function Login() {
   let navigate = useNavigate();
@@ -10,6 +12,7 @@ function Login() {
   let [password, setPassword] = useState("");
   let [loading, setLoading] = useState(false);
   let [err, setErr] = useState("");
+  let dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,7 +26,7 @@ function Login() {
         },
         { withCredentials: true }
       );
-      console.log(result);
+      dispatch(setUserData(result.data));
       setEmail("");
       setPassword("");
       setLoading(false);
@@ -68,7 +71,7 @@ function Login() {
               {`${show ? "hidden" : "show"}`}
             </span>
           </div>
-          {err && <p className="text-red-500 text-[20px] font-bold">{err}</p>}
+          {err && <p className="text-red-500 text-[18px] font-bold">{err}</p>}
           <button
             className="px-[20px] py-[10px] bg-[#20c7ff] rounded-2xl shadow-gray-400 shadow-lg text-[20px] w-[200px] mt-[16px] font-semibold hover:shadow-inner cursor-pointer"
             disabled={loading}
