@@ -29,6 +29,7 @@ function Signup() {
         { withCredentials: true }
       );
       dispatch(setUserData(result.data));
+      navigate("/profile");
       setUserName("");
       setEmail("");
       setPassword("");
