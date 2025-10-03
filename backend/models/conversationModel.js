@@ -7,7 +7,7 @@ const conversationSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
-    messages: [{ type: String }],
+    messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
   },
   { timestamps: true }
 );
