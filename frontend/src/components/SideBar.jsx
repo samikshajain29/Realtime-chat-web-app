@@ -6,11 +6,17 @@ import { RxCross2 } from "react-icons/rx";
 import { BiLogOutCircle } from "react-icons/bi";
 import axios from "axios";
 import { serverUrl } from "../main";
-import { setOtherUsers, setUserData } from "../redux/userSlice";
+import {
+  setOtherUsers,
+  setSelectedUser,
+  setUserData,
+} from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 
 function SideBar() {
-  let { userData, otherUsers } = useSelector((state) => state.user);
+  let { userData, otherUsers, selectedUser } = useSelector(
+    (state) => state.user
+  );
   let [search, setSearch] = useState(false);
   let dispatch = useDispatch();
   let navigate = useNavigate();
@@ -28,7 +34,11 @@ function SideBar() {
     }
   };
   return (
-    <div className="lg:w-[30%] w-full h-full bg-slate-200">
+    <div
+      className={`lg:w-[30%] w-full h-full lg:block ${
+        !selectedUser ? "block" : "hidden"
+      } bg-slate-200`}
+    >
       <div
         className="w-[60px] h-[60px] rounded-full overflow-hidden flex justify-center mt-[10px] bg-[#20c7ff] text-gray-700 items-center shadow-gray-500 shadow-lg cursor-pointer fixed bottom-[20px] left-[10px]"
         onClick={handleLogout}
@@ -73,12 +83,28 @@ function SideBar() {
             </form>
           )}
 
-          {otherUsers?.map((user) => (
-            <div className="w-[60px] h-[60px] mt-[10px] rounded-full overflow-hidden flex justify-center items-center shadow-gray-500 bg-white shadow-lg">
+          {!search &&
+            otherUsers?.map((user) => (
+              <div className="w-[60px] h-[60px] mt-[10px] rounded-full overflow-hidden flex justify-center items-center shadow-gray-500 bg-white shadow-lg">
+                <img src={user.image || dp} alt="" className="h-[100%]" />
+              </div>
+            ))}
+        </div>
+      </div>
+      <div className="w-full h-[60vh] overflow-auto flex flex-col gap-[20px] items-center mt-[20px]">
+        {otherUsers?.map((user) => (
+          <div
+            className="w-[95%] h-[60px] flex items-center gap-[20px] bg-white shadow-gray-500 shadow-lg rounded-full hover:bg-[#b2ccdf] cursor-pointer"
+            onClick={() => dispatch(setSelectedUser(user))}
+          >
+            <div className="w-[60px] h-[60px] rounded-full overflow-hidden flex justify-center items-center shadow-gray-500 bg-white shadow-lg">
               <img src={user.image || dp} alt="" className="h-[100%]" />
             </div>
-          ))}
-        </div>
+            <h1 className="text-gray-800 font-semibold text-[20px]">
+              {user.name || user.userName}
+            </h1>
+          </div>
+        ))}
       </div>
     </div>
   );
