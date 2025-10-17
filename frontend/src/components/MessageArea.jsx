@@ -11,15 +11,17 @@ import axios from "axios";
 import { serverUrl } from "../main";
 import SenderMessage from "./SenderMessage";
 import ReceiverMessage from "./ReceiverMessage";
+import { setMessages } from "../redux/messageSlice";
 
 function MessageArea() {
-  let { selectedUser } = useSelector((state) => state.user);
+  let { selectedUser, userData } = useSelector((state) => state.user);
   let dispatch = useDispatch();
   let [showPicker, setShowPicker] = useState(false);
   let [input, setInput] = useState("");
   let [frontendImage, setFrontendImage] = useState(null);
   let [backendImage, setBackendImage] = useState(null);
   let image = useRef();
+  let { messages } = useSelector((state) => state.message);
 
   const handleImage = (e) => {
     let file = e.target.files[0];
@@ -39,7 +41,7 @@ function MessageArea() {
         formData,
         { withCredentials: true }
       );
-      console.log(result.data);
+      dispatch(setMessages([...messages, result.data]));
       setInput("");
       setFrontendImage(null);
       setBackendImage(null);
@@ -78,7 +80,7 @@ function MessageArea() {
               {selectedUser?.name || "user"}
             </h1>
           </div>
-          <div className="w-full h-[550px] flex flex-col py-[30px] px-[20px] overflow-auto">
+          <div className="w-full h-[550px] flex flex-col py-[30px] px-[20px] overflow-auto gap-[20px]">
             {showPicker && (
               <div className="absolute bottom-[120px] left-[20px]">
                 <EmojiPicker
@@ -89,6 +91,14 @@ function MessageArea() {
                 />
               </div>
             )}
+            {messages &&
+              messages.map((mess) =>
+                mess.sender == userData._id ? (
+                  <SenderMessage image={mess.image} message={mess.message} />
+                ) : (
+                  <ReceiverMessage image={mess.image} message={mess.message} />
+                )
+              )}
           </div>
         </div>
       )}

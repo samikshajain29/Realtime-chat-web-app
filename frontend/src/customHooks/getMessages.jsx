@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { serverUrl } from "../main";
-import { setOtherUsers, setUserData } from "../redux/userSlice.js";
+import { setMessages } from "../redux/messageSlice.js";
 
 const getMessages = () => {
   let dispatch = useDispatch();
@@ -16,12 +16,12 @@ const getMessages = () => {
             withCredentials: true,
           }
         );
-        dispatch(setOtherUsers(result.data));
+        dispatch(setMessages(result.data));
       } catch (error) {
         console.log(error);
       }
     };
-    fetchUser();
-  }, [userData]);
+    fetchMessages();
+  }, [selectedUser, userData]);
 };
 export default getMessages;
