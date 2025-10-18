@@ -12,9 +12,10 @@ import { serverUrl } from "../main";
 import SenderMessage from "./SenderMessage";
 import ReceiverMessage from "./ReceiverMessage";
 import { setMessages } from "../redux/messageSlice";
+import { useEffect } from "react";
 
 function MessageArea() {
-  let { selectedUser, userData } = useSelector((state) => state.user);
+  let { selectedUser, userData, socket } = useSelector((state) => state.user);
   let dispatch = useDispatch();
   let [showPicker, setShowPicker] = useState(false);
   let [input, setInput] = useState("");
@@ -53,6 +54,13 @@ function MessageArea() {
     setInput((prevInput) => prevInput + emojiData.emoji);
     setShowPicker(false);
   };
+
+  useEffect(() => {
+    socket.on("newMessage", (mess) => {
+      dispatch(setMessages([...messages, mess]));
+    });
+    return () => socket.off("newMessage");
+  }, [messages, setMessages]);
 
   return (
     <div
