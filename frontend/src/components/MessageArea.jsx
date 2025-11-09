@@ -31,6 +31,9 @@ function MessageArea() {
   };
   const handleSendMessage = async (e) => {
     e.preventDefault();
+    if (input.length == 0 && backendImage == null) {
+      return null;
+    }
     try {
       let formData = new FormData();
       formData.append("message", input);
@@ -88,13 +91,13 @@ function MessageArea() {
               {selectedUser?.name || "user"}
             </h1>
           </div>
-          <div className="w-full h-[550px] flex flex-col py-[30px] px-[20px] overflow-auto gap-[20px]">
+          <div className="w-full h-[70%] flex flex-col py-[30px] px-[20px] overflow-auto gap-[20px]">
             {showPicker && (
               <div className="absolute bottom-[120px] left-[20px]">
                 <EmojiPicker
                   width={250}
                   height={350}
-                  className="shadow-lg"
+                  className="shadow-lg z-[100]"
                   onEmojiClick={onEmojiClick}
                 />
               </div>
@@ -153,9 +156,11 @@ function MessageArea() {
             <div onClick={() => image.current.click()}>
               <FaImages className="w-[25px] h-[25px] text-white cursor-pointer" />
             </div>
-            <button>
-              <RiSendPlane2Fill className="w-[25px] h-[25px] text-white cursor-pointer" />
-            </button>
+            {(input.length > 0 || backendImage != null) && (
+              <button>
+                <RiSendPlane2Fill className="w-[25px] h-[25px] text-white cursor-pointer" />
+              </button>
+            )}
           </form>
         </div>
       )}

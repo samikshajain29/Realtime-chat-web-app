@@ -14,7 +14,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 function SideBar() {
-  let { userData, otherUsers, selectedUser } = useSelector(
+  let { userData, otherUsers, selectedUser, onlineUsers } = useSelector(
     (state) => state.user
   );
   let [search, setSearch] = useState(false);
@@ -35,7 +35,7 @@ function SideBar() {
   };
   return (
     <div
-      className={`lg:w-[30%] w-full h-full lg:block ${
+      className={`lg:w-[30%] w-full h-full overflow-hidden lg:block bg-slate-200 ${
         !selectedUser ? "block" : "hidden"
       } bg-slate-200`}
     >
@@ -58,7 +58,7 @@ function SideBar() {
             <img src={userData.image || dp} alt="" className="h-[100%]" />
           </div>
         </div>
-        <div className="w-full flex items-center gap-[20px]">
+        <div className="w-full flex items-center gap-[20px] overflow-y-auto py-[18px]">
           {!search && (
             <div
               className="w-[60px] h-[60px] rounded-full overflow-hidden flex justify-center mt-[10px] bg-white items-center shadow-gray-500 shadow-lg cursor-pointer"
@@ -84,21 +84,35 @@ function SideBar() {
           )}
 
           {!search &&
-            otherUsers?.map((user) => (
-              <div className="w-[60px] h-[60px] mt-[10px] rounded-full overflow-hidden flex justify-center items-center shadow-gray-500 bg-white shadow-lg">
-                <img src={user.image || dp} alt="" className="h-[100%]" />
-              </div>
-            ))}
+            otherUsers?.map(
+              (user) =>
+                onlineUsers?.includes(user._id) && (
+                  <div
+                    className="relative rounded-full shadow-gray-500 bg-white shadow-lg  mt-[10px] flex justify-center items-center cursor-pointer"
+                    onClick={() => dispatch(setSelectedUser(user))}
+                  >
+                    <div className="w-[60px] h-[60px] rounded-full overflow-hidden flex justify-center items-center ">
+                      <img src={user.image || dp} alt="" className="h-[100%]" />
+                    </div>
+                    <span className="w-[12px] h-[12px] rounded-full absolute bottom-[6px] right-[-1px] bg-[#3aff20] shadow-gray-500 shadow-md"></span>
+                  </div>
+                )
+            )}
         </div>
       </div>
-      <div className="w-full h-[60vh] overflow-auto flex flex-col gap-[20px] items-center mt-[20px]">
+      <div className="w-full h-[50%] overflow-auto flex flex-col gap-[20px] items-center mt-[20px]">
         {otherUsers?.map((user) => (
           <div
-            className="w-[95%] h-[60px] flex items-center gap-[20px] bg-white shadow-gray-500 shadow-lg rounded-full hover:bg-[#b2ccdf] cursor-pointer"
+            className="w-[95%] h-[60px] flex items-center gap-[20px] bg-white shadow-gray-500 shadow-lg rounded-full hover:bg-[#78cae5] cursor-pointer"
             onClick={() => dispatch(setSelectedUser(user))}
           >
-            <div className="w-[60px] h-[60px] rounded-full overflow-hidden flex justify-center items-center shadow-gray-500 bg-white shadow-lg">
-              <img src={user.image || dp} alt="" className="h-[100%]" />
+            <div className="relative rounded-full shadow-gray-500 bg-white shadow-lg  mt-[10px] flex justify-center items-center">
+              <div className="w-[60px] h-[60px] rounded-full overflow-hidden flex justify-center items-center ">
+                <img src={user.image || dp} alt="" className="h-[100%]" />
+              </div>
+              {onlineUsers?.includes(user._id) && (
+                <span className="w-[12px] h-[12px] rounded-full absolute bottom-[6px] right-[-1px] bg-[#3aff20] shadow-gray-500 shadow-md"></span>
+              )}
             </div>
             <h1 className="text-gray-800 font-semibold text-[20px]">
               {user.name || user.userName}
