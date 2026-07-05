@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
 import dp from "../assets/dp.webp";
@@ -13,23 +13,30 @@ import { serverUrl } from "../main";
 import SenderMessage from "./SenderMessage";
 import ReceiverMessage from "./ReceiverMessage";
 import { setMessages } from "../redux/messageSlice";
-import { useEffect } from "react";
+import { getSocket } from "../socket/socketService";
 
 function MessageArea() {
-  let { selectedUser, userData, socket } = useSelector((state) => state.user);
+  let { selectedUser, userData, onlineUsers } = useSelector((state) => state.user);
   let dispatch = useDispatch();
   let [showPicker, setShowPicker] = useState(false);
   let [input, setInput] = useState("");
   let [frontendImage, setFrontendImage] = useState(null);
   let [backendImage, setBackendImage] = useState(null);
   let image = useRef();
+  let messagesEndRef = useRef(null);
   let { messages } = useSelector((state) => state.message);
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleImage = (e) => {
     let file = e.target.files[0];
     setBackendImage(file);
     setFrontendImage(URL.createObjectURL(file));
   };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (input.length == 0 && backendImage == null) {
@@ -54,17 +61,35 @@ function MessageArea() {
       console.log(error);
     }
   };
+
   const onEmojiClick = (emojiData) => {
     setInput((prevInput) => prevInput + emojiData.emoji);
     setShowPicker(false);
   };
 
+  // Real-time message listener — uses the raw socket from the module ref,
+  // NOT the broken Redux proxy. Uses a functional dispatch pattern to avoid
+  // stale closure over `messages`.
   useEffect(() => {
-    socket?.on("newMessage", (mess) => {
-      dispatch(setMessages([...messages, mess]));
-    });
-    return () => socket?.off("newMessage");
-  }, [messages, setMessages, socket]);
+    const socket = getSocket();
+    if (!socket) return;
+
+    const handleNewMessage = (newMsg) => {
+      // Only add message if it belongs to the currently selected conversation
+      if (newMsg.sender === selectedUser?._id || newMsg.receiver === selectedUser?._id) {
+        dispatch((_, getState) => {
+          const currentMessages = getState().message.messages;
+          dispatch(setMessages([...currentMessages, newMsg]));
+        });
+      }
+    };
+
+    socket.on("newMessage", handleNewMessage);
+    return () => socket.off("newMessage", handleNewMessage);
+  }, [selectedUser, dispatch]);
+
+  // Check if selected user is online
+  const isOnline = onlineUsers?.includes(selectedUser?._id);
 
   return (
     <div
@@ -93,7 +118,11 @@ function MessageArea() {
               <h1 className="text-white font-semibold text-lg leading-tight">
                 {selectedUser?.name || "User"}
               </h1>
-              <span className="text-indigo-400 text-xs font-medium">Online</span>
+              {isOnline ? (
+                <span className="text-emerald-400 text-xs font-medium">Online</span>
+              ) : (
+                <span className="text-slate-500 text-xs">Offline</span>
+              )}
             </div>
           </div>
 
@@ -118,6 +147,7 @@ function MessageArea() {
                   <ReceiverMessage key={mess._id} image={mess.image} message={mess.message} />
                 )
               )}
+            <div ref={messagesEndRef} />
           </div>
 
           {/* Input Area */}

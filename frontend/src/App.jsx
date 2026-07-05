@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
@@ -7,15 +7,15 @@ import { useDispatch, useSelector } from "react-redux";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import getOtherUsers from "./customHooks/getOtherUsers";
-import { useEffect } from "react";
 import { io } from "socket.io-client";
 import { serverUrl } from "./main";
-import { setOnlineUsers, setSocket } from "./redux/userSlice";
+import { setOnlineUsers } from "./redux/userSlice";
+import { getSocket, setSocketRef } from "./socket/socketService";
 
 function App() {
   getCurrentUser();
   getOtherUsers();
-  let { userData, socket, onlineUsers } = useSelector((state) => state.user);
+  let { userData } = useSelector((state) => state.user);
   let dispatch = useDispatch();
 
   useEffect(() => {
@@ -25,20 +25,27 @@ function App() {
           userId: userData?._id,
         },
       });
-      dispatch(setSocket(socketio));
+
+      // Store the raw socket in the module-level ref (NOT in Redux)
+      setSocketRef(socketio);
 
       socketio.on("getOnlineUsers", (users) => {
         dispatch(setOnlineUsers(users));
       });
 
-      return () => socketio.close();
+      return () => {
+        socketio.close();
+        setSocketRef(null);
+      };
     } else {
-      if (socket) {
-        socket.close();
-        dispatch(setSocket(null));
+      const existing = getSocket();
+      if (existing) {
+        existing.close();
+        setSocketRef(null);
       }
     }
   }, [userData]);
+
   return (
     <Routes>
       <Route
