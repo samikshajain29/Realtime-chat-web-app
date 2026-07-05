@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { serverUrl } from "../main";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
 
 function Signup() {
@@ -41,32 +41,34 @@ function Signup() {
       setErr(error?.response?.data?.message);
     }
   };
+
   return (
-    <div className="w-full h-screen bg-slate-900 flex items-center justify-center relative overflow-hidden">
+    <div className="w-full h-screen bg-slate-50 flex items-center justify-center relative overflow-hidden">
       {/* Background decorative elements */}
-      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600 rounded-full mix-blend-screen filter blur-[120px] opacity-40 animate-pulse"></div>
-      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600 rounded-full mix-blend-screen filter blur-[120px] opacity-40 animate-pulse" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full blob-teal filter blur-[100px] opacity-80 animate-pulse"></div>
+      <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full blob-sky filter blur-[100px] opacity-80 animate-pulse" style={{ animationDelay: '2s' }}></div>
       
-      <div className="w-full max-w-[450px] glass-panel rounded-2xl shadow-2xl flex flex-col overflow-hidden relative z-10 border border-slate-700/50">
-        <div className="w-full py-10 flex flex-col items-center justify-center relative">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500"></div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">
+      <div className="w-full max-w-[440px] glass-card rounded-3xl flex flex-col overflow-hidden relative z-10 p-8 border border-white/60">
+        <div className="w-full pb-8 flex flex-col items-center justify-center relative">
+          <div className="absolute top-[-32px] left-[-32px] right-[-32px] h-[5px] bg-gradient-to-r from-teal-400 to-sky-400"></div>
+          <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">
             Create Account
           </h1>
-          <p className="text-slate-400 mt-2">Join <span className="text-indigo-400 font-semibold">Chatify</span> today</p>
+          <p className="text-slate-500 mt-2 text-sm">Join <span className="text-teal-600 font-semibold">Chatify</span> today</p>
         </div>
         
         <form
-          className="w-full px-8 pb-10 flex flex-col gap-5 items-center"
+          className="w-full flex flex-col gap-5 items-center"
           onSubmit={handleSignup}
         >
           <div className="w-full relative group">
             <input
               type="text"
               placeholder="Username"
-              className="w-full h-[52px] outline-none border border-slate-600 bg-slate-800/50 px-5 rounded-xl text-white placeholder-slate-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all duration-300"
+              className="w-full h-[52px] outline-none border border-slate-200 bg-white/90 px-5 rounded-2xl text-slate-800 placeholder-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-300 shadow-sm"
               onChange={(e) => setUserName(e.target.value)}
               value={userName}
+              required
             />
           </div>
 
@@ -74,9 +76,10 @@ function Signup() {
             <input
               type="email"
               placeholder="Email address"
-              className="w-full h-[52px] outline-none border border-slate-600 bg-slate-800/50 px-5 rounded-xl text-white placeholder-slate-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all duration-300"
+              className="w-full h-[52px] outline-none border border-slate-200 bg-white/90 px-5 rounded-2xl text-slate-800 placeholder-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-300 shadow-sm"
               onChange={(e) => setEmail(e.target.value)}
               value={email}
+              required
             />
           </div>
           
@@ -84,22 +87,23 @@ function Signup() {
             <input
               type={`${show ? "text" : "password"}`}
               placeholder="Password"
-              className="w-full h-[52px] outline-none border border-slate-600 bg-slate-800/50 px-5 pr-12 rounded-xl text-white placeholder-slate-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all duration-300"
+              className="w-full h-[52px] outline-none border border-slate-200 bg-white/90 px-5 pr-12 rounded-2xl text-slate-800 placeholder-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-300 shadow-sm"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
+              required
             />
             <span
-              className="absolute top-1/2 -translate-y-1/2 right-4 text-sm text-indigo-400 font-medium cursor-pointer hover:text-indigo-300 transition-colors select-none"
+              className="absolute top-1/2 -translate-y-1/2 right-4 text-xs font-semibold text-teal-600 hover:text-teal-700 transition-colors cursor-pointer select-none"
               onClick={() => setShow((prev) => !prev)}
             >
               {`${show ? "Hide" : "Show"}`}
             </span>
           </div>
 
-          {err && <p className="text-rose-400 text-sm font-medium w-full text-center bg-rose-500/10 py-2 rounded-lg border border-rose-500/20">{err}</p>}
+          {err && <p className="text-rose-600 text-xs font-medium w-full text-center bg-rose-50 py-2.5 rounded-2xl border border-rose-100">{err}</p>}
           
           <button
-            className="w-full h-[52px] bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-semibold text-lg mt-2 transition-all duration-300 transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-indigo-600/30"
+            className="w-full h-[52px] bg-gradient-to-r from-teal-600 to-sky-600 hover:from-teal-500 hover:to-sky-500 rounded-2xl text-white font-semibold text-base mt-2 transition-all duration-300 transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed shadow-md shadow-teal-600/10"
             disabled={loading}
           >
             {loading ? (
@@ -110,10 +114,10 @@ function Signup() {
             ) : "Sign up"}
           </button>
           
-          <p className="text-slate-400 mt-4 text-sm">
+          <p className="text-slate-500 mt-4 text-sm">
             Already have an account?{" "}
             <span 
-              className="text-indigo-400 font-semibold cursor-pointer hover:text-indigo-300 transition-colors" 
+              className="text-teal-600 font-semibold cursor-pointer hover:text-teal-500 transition-colors" 
               onClick={() => navigate("/login")}
             >
               Sign in

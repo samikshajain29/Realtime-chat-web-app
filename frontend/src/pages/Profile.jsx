@@ -46,30 +46,31 @@ function Profile() {
       setSaving(false);
     }
   };
+
   return (
-    <div className="w-full h-screen bg-slate-900 flex flex-col justify-center items-center gap-8 relative overflow-hidden">
+    <div className="w-full h-screen bg-slate-50 flex flex-col justify-center items-center gap-8 relative overflow-hidden">
       {/* Background decorative elements */}
-      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-pulse"></div>
-      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-pulse" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full blob-teal filter blur-[100px] opacity-80 animate-pulse"></div>
+      <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full blob-sky filter blur-[100px] opacity-80 animate-pulse" style={{ animationDelay: '2s' }}></div>
 
       <div
-        className="fixed top-6 left-6 cursor-pointer z-50 glass p-2 rounded-full hover:bg-white/10 transition-colors"
+        className="fixed top-6 left-6 cursor-pointer z-50 glass-card p-2.5 rounded-full hover:bg-slate-100/80 transition-colors shadow-sm"
         onClick={() => navigate("/")}
       >
-        <IoIosArrowRoundBack className="w-8 h-8 text-white" />
+        <IoIosArrowRoundBack className="w-8 h-8 text-slate-700" />
       </div>
 
-      <div className="z-10 w-full max-w-[450px] glass-panel rounded-3xl p-8 flex flex-col items-center border border-slate-700/50 shadow-2xl">
-        <h1 className="text-2xl font-bold text-white mb-6">Edit Profile</h1>
+      <div className="z-10 w-full max-w-[440px] glass-card rounded-3xl p-8 flex flex-col items-center border border-white/60 shadow-lg">
+        <h1 className="text-2xl font-bold text-slate-800 mb-6">Edit Profile</h1>
         
         <div
           className="relative group cursor-pointer mb-8"
           onClick={() => image.current.click()}
         >
-          <div className="w-32 h-32 rounded-full overflow-hidden flex justify-center items-center border-4 border-indigo-500 shadow-xl shadow-indigo-500/20 bg-slate-800 transition-transform duration-300 group-hover:scale-105">
+          <div className="w-32 h-32 rounded-full overflow-hidden flex justify-center items-center border-4 border-teal-500 shadow-lg shadow-teal-500/10 bg-slate-100 transition-transform duration-300 group-hover:scale-105">
             <img src={frontendImage} alt="" className="w-full h-full object-cover" />
           </div>
-          <div className="absolute bottom-0 right-0 w-10 h-10 rounded-full bg-indigo-600 text-white flex justify-center items-center shadow-lg border-2 border-slate-900 transition-transform duration-300 group-hover:scale-110 group-hover:bg-indigo-500">
+          <div className="absolute bottom-0 right-0 w-10 h-10 rounded-full bg-teal-600 text-white flex justify-center items-center shadow-md border-2 border-white transition-transform duration-300 group-hover:scale-110 group-hover:bg-teal-500">
             <IoCameraOutline className="w-5 h-5" />
           </div>
         </div>
@@ -86,38 +87,38 @@ function Profile() {
             onChange={handleImage}
           />
           <div className="w-full relative">
-            <span className="text-xs font-semibold text-indigo-400 absolute -top-2 left-3 bg-slate-800 px-2 rounded">Display Name</span>
+            <span className="text-xs font-semibold text-teal-600 absolute -top-2 left-3 bg-white px-2 rounded">Display Name</span>
             <input
               type="text"
               placeholder="Enter your name"
-              className="w-full h-[52px] outline-none border border-slate-600 bg-slate-800/80 px-5 rounded-xl text-white placeholder-slate-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+              className="w-full h-[52px] outline-none border border-slate-200 bg-white/90 px-5 rounded-2xl text-slate-800 placeholder-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all shadow-sm"
               onChange={(e) => setName(e.target.value)}
               value={name}
             />
           </div>
           
-          <div className="w-full relative mt-2 opacity-70">
-            <span className="text-xs font-semibold text-slate-400 absolute -top-2 left-3 bg-slate-800 px-2 rounded">Username</span>
+          <div className="w-full relative mt-2 opacity-80">
+            <span className="text-xs font-semibold text-slate-400 absolute -top-2 left-3 bg-white px-2 rounded">Username</span>
             <input
               type="text"
               readOnly
-              className="w-full h-[52px] outline-none border border-slate-700 bg-slate-800/50 px-5 rounded-xl text-slate-400 cursor-not-allowed"
+              className="w-full h-[52px] outline-none border border-slate-200 bg-slate-50 px-5 rounded-2xl text-slate-500 cursor-not-allowed shadow-sm"
               value={userData?.userName}
             />
           </div>
           
-          <div className="w-full relative mt-2 opacity-70">
-            <span className="text-xs font-semibold text-slate-400 absolute -top-2 left-3 bg-slate-800 px-2 rounded">Email Address</span>
+          <div className="w-full relative mt-2 opacity-80">
+            <span className="text-xs font-semibold text-slate-400 absolute -top-2 left-3 bg-white px-2 rounded">Email Address</span>
             <input
               type="email"
               readOnly
-              className="w-full h-[52px] outline-none border border-slate-700 bg-slate-800/50 px-5 rounded-xl text-slate-400 cursor-not-allowed"
+              className="w-full h-[52px] outline-none border border-slate-200 bg-slate-50 px-5 rounded-2xl text-slate-500 cursor-not-allowed shadow-sm"
               value={userData?.email}
             />
           </div>
           
           <button
-            className="w-full h-[52px] bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-semibold text-lg mt-6 transition-all duration-300 transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-indigo-600/30"
+            className="w-full h-[52px] bg-gradient-to-r from-teal-600 to-sky-600 hover:from-teal-500 hover:to-sky-500 rounded-2xl text-white font-semibold text-base mt-6 transition-all duration-300 transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed shadow-md shadow-teal-600/10"
             disabled={saving}
           >
             {saving ? (

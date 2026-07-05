@@ -8,7 +8,7 @@ function Home() {
   let { selectedUser } = useSelector((state) => state.user);
   getMessages();
   return (
-    <div className="w-full h-screen flex overflow-hidden bg-slate-900 text-slate-200">
+    <div className="w-full h-screen flex overflow-hidden bg-slate-50 text-slate-850">
       <SideBar />
       <MessageArea />
     </div>
