@@ -14,23 +14,25 @@ function SenderMessage({ image, message }) {
   };
 
   return (
-    <div className="flex items-start gap-[10px]">
+    <div className="flex items-end justify-end gap-3 w-full group">
       <div
         ref={scroll}
-        className="w-fit max-w-[500px] bg-[rgb(23,151,194)] px-[20px] py-[10px] text-white text-[19px] rounded-tr-none rounded-2xl relative right-0 ml-auto shadow-gray-400 shadow-lg gap-[10px] flex flex-col"
+        className="w-fit max-w-[75%] md:max-w-[65%] bg-indigo-600 px-4 py-3 text-white text-sm md:text-base rounded-2xl rounded-br-sm shadow-md flex flex-col gap-2 relative"
       >
         {image && (
-          <img
-            src={image}
-            alt=""
-            className="w-[150px] rounded-lg"
-            onLoad={handleImageScroll}
-          />
+          <div className="rounded-lg overflow-hidden border border-indigo-500/50">
+            <img
+              src={image}
+              alt="Sent content"
+              className="w-full max-w-[250px] object-cover"
+              onLoad={handleImageScroll}
+            />
+          </div>
         )}
-        {message && <span>{message}</span>}
+        {message && <span className="leading-relaxed whitespace-pre-wrap">{message}</span>}
       </div>
-      <div className="w-[40px] h-[40px] rounded-full overflow-hidden flex justify-center items-center bg-white shadow-gray-500 shadow-lg">
-        <img src={userData.image || dp} alt="" className="h-[100%]" />
+      <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 shadow-sm border border-slate-700 mt-auto opacity-0 group-hover:opacity-100 transition-opacity">
+        <img src={userData.image || dp} alt="" className="w-full h-full object-cover" />
       </div>
     </div>
   );

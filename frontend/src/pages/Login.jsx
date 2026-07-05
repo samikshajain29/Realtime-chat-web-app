@@ -40,49 +40,72 @@ function Login() {
     }
   };
   return (
-    <div className="w-full h-[100vh] bg-slate-200 flex items-center justify-center">
-      <div className="w-full max-w-[500px] h-[600px] bg-white rounded-lg shadow-gray-400 shadow-lg flex flex-col gap-[30px]">
-        <div className="w-full h-[200px] bg-[#20c7ff] rounded-b-[30%] shadow-gray-400 shadow-lg flex items-center justify-center">
-          <h1 className="text-gray-600 font-bold text-[30px]">
-            Login to <span className="text-white">Chatify</span>
+    <div className="w-full h-screen bg-slate-900 flex items-center justify-center relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600 rounded-full mix-blend-screen filter blur-[120px] opacity-40 animate-pulse"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600 rounded-full mix-blend-screen filter blur-[120px] opacity-40 animate-pulse" style={{ animationDelay: '2s' }}></div>
+      
+      <div className="w-full max-w-[450px] glass-panel rounded-2xl shadow-2xl flex flex-col overflow-hidden relative z-10 border border-slate-700/50">
+        <div className="w-full py-10 flex flex-col items-center justify-center relative">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">
+            Welcome back
           </h1>
+          <p className="text-slate-400 mt-2">Login to your <span className="text-indigo-400 font-semibold">Chatify</span> account</p>
         </div>
+        
         <form
-          className="w-full flex flex-col gap-[20px] items-center"
+          className="w-full px-8 pb-10 flex flex-col gap-5 items-center"
           onSubmit={handleLogin}
         >
-          <input
-            type="email"
-            placeholder="email"
-            className="w-[90%] h-[50px] outline-none border-2 border-[#20c7ff] px-[20px] py-[10px] bg-[white] rounded-lg shadow-gray-200 shadow-lg text-gray-700 text-[19px]"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-          />
-          <div className="w-[90%] h-[50px] border-2 border-[#20c7ff] overflow-hidden rounded-lg shadow-gray-200 shadow-lg relative">
+          <div className="w-full relative group">
+            <input
+              type="email"
+              placeholder="Email address"
+              className="w-full h-[52px] outline-none border border-slate-600 bg-slate-800/50 px-5 rounded-xl text-white placeholder-slate-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all duration-300"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+            />
+          </div>
+          
+          <div className="w-full relative group">
             <input
               type={`${show ? "text" : "password"}`}
-              placeholder="password"
-              className="w-full h-full outline-none  px-[20px] py-[10px] bg-[white]  text-gray-700 text-[19px] "
+              placeholder="Password"
+              className="w-full h-[52px] outline-none border border-slate-600 bg-slate-800/50 px-5 pr-12 rounded-xl text-white placeholder-slate-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all duration-300"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
             />
             <span
-              className="absolute top-[10px] right-[20px] text-[19px]  text-[#20c7ff] font-semibold cursor-pointer"
+              className="absolute top-1/2 -translate-y-1/2 right-4 text-sm text-indigo-400 font-medium cursor-pointer hover:text-indigo-300 transition-colors select-none"
               onClick={() => setShow((prev) => !prev)}
             >
-              {`${show ? "hidden" : "show"}`}
+              {`${show ? "Hide" : "Show"}`}
             </span>
           </div>
-          {err && <p className="text-red-500 text-[18px] font-bold">{err}</p>}
+
+          {err && <p className="text-rose-400 text-sm font-medium w-full text-center bg-rose-500/10 py-2 rounded-lg border border-rose-500/20">{err}</p>}
+          
           <button
-            className="px-[20px] py-[10px] bg-[#20c7ff] rounded-2xl shadow-gray-400 shadow-lg text-[20px] w-[200px] mt-[16px] font-semibold hover:shadow-inner cursor-pointer"
+            className="w-full h-[52px] bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-semibold text-lg mt-2 transition-all duration-300 transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-indigo-600/30"
             disabled={loading}
           >
-            {loading ? "Loading..." : "Login"}
+            {loading ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                <span>Signing in...</span>
+              </div>
+            ) : "Sign in"}
           </button>
-          <p className="cursor-pointer" onClick={() => navigate("/signup")}>
-            Doesn't Have An Account ?{" "}
-            <span className="text-[#20c7ff] text-[bold]">Signup</span>
+          
+          <p className="text-slate-400 mt-4 text-sm">
+            Don't have an account?{" "}
+            <span 
+              className="text-indigo-400 font-semibold cursor-pointer hover:text-indigo-300 transition-colors" 
+              onClick={() => navigate("/signup")}
+            >
+              Create one
+            </span>
           </p>
         </form>
       </div>

@@ -47,62 +47,88 @@ function Profile() {
     }
   };
   return (
-    <div className="w-full h-[100vh] bg-slate-200 flex flex-col justify-center items-center gap-[20px]">
+    <div className="w-full h-screen bg-slate-900 flex flex-col justify-center items-center gap-8 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-pulse"></div>
+      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-pulse" style={{ animationDelay: '2s' }}></div>
+
       <div
-        className="fixed top-[20px] left-[20px] cursor-pointer"
+        className="fixed top-6 left-6 cursor-pointer z-50 glass p-2 rounded-full hover:bg-white/10 transition-colors"
         onClick={() => navigate("/")}
       >
-        <IoIosArrowRoundBack className="w-[50px] h-[50px] text-gray-600" />
+        <IoIosArrowRoundBack className="w-8 h-8 text-white" />
       </div>
-      <div
-        className=" bg-white rounded-full border-4 border-[#20c7ff] shadow-gray-400 shadow-lg  relative"
-        onClick={() => image.current.click()}
-      >
-        <div className="w-[175px] h-[175px] rounded-full overflow-hidden flex justify-center items-center">
-          <img src={frontendImage} alt="" className="h-[100%]" />
-        </div>
-        <div className="absolute bottom-4 text-gray-700 right-4 w-[35px] h-[35px] rounded-full bg-[#20c7ff] flex justify-center items-center shadow-gray-300 shadow-lg">
-          <IoCameraOutline className=" text-gray-700  w-[25px] h-[25px]" />
-        </div>
-      </div>
-      <form
-        action=""
-        className="w-[95%] max-w-[500px] flex flex-col gap-[20px] items-center justify-center"
-        onSubmit={handleProfile}
-      >
-        <input
-          type="file"
-          accept="image/*"
-          ref={image}
-          hidden
-          onChange={handleImage}
-        />
-        <input
-          type="text"
-          placeholder="Enter your name"
-          className="w-[90%] h-[50px] outline-none border-2 border-[#20c7ff] px-[20px] py-[10px] bg-[white] rounded-lg shadow-gray-300 shadow-lg text-gray-700 text-[19px]"
-          onChange={(e) => setName(e.target.value)}
-          value={name}
-        />
-        <input
-          type="text"
-          readOnly
-          className="w-[90%] h-[50px] outline-none border-2 border-[#20c7ff] px-[20px] py-[10px] bg-[white] rounded-lg shadow-gray-300 shadow-lg text-gray-400 text-[19px]"
-          value={userData?.userName}
-        />
-        <input
-          type="email"
-          readOnly
-          className="w-[90%] h-[50px] outline-none border-2 border-[#20c7ff] px-[20px] py-[10px] bg-[white] rounded-lg shadow-gray-300 shadow-lg text-gray-400 text-[19px]"
-          value={userData?.email}
-        />
-        <button
-          className="px-[20px] py-[10px] bg-[#20c7ff] rounded-2xl shadow-gray-400 shadow-lg text-[20px] w-[200px] mt-[16px] font-semibold hover:shadow-inner cursor-pointer"
-          disabled={saving}
+
+      <div className="z-10 w-full max-w-[450px] glass-panel rounded-3xl p-8 flex flex-col items-center border border-slate-700/50 shadow-2xl">
+        <h1 className="text-2xl font-bold text-white mb-6">Edit Profile</h1>
+        
+        <div
+          className="relative group cursor-pointer mb-8"
+          onClick={() => image.current.click()}
         >
-          {saving ? "Saving..." : "Save Profile"}
-        </button>
-      </form>
+          <div className="w-32 h-32 rounded-full overflow-hidden flex justify-center items-center border-4 border-indigo-500 shadow-xl shadow-indigo-500/20 bg-slate-800 transition-transform duration-300 group-hover:scale-105">
+            <img src={frontendImage} alt="" className="w-full h-full object-cover" />
+          </div>
+          <div className="absolute bottom-0 right-0 w-10 h-10 rounded-full bg-indigo-600 text-white flex justify-center items-center shadow-lg border-2 border-slate-900 transition-transform duration-300 group-hover:scale-110 group-hover:bg-indigo-500">
+            <IoCameraOutline className="w-5 h-5" />
+          </div>
+        </div>
+        
+        <form
+          className="w-full flex flex-col gap-4 items-center"
+          onSubmit={handleProfile}
+        >
+          <input
+            type="file"
+            accept="image/*"
+            ref={image}
+            hidden
+            onChange={handleImage}
+          />
+          <div className="w-full relative">
+            <span className="text-xs font-semibold text-indigo-400 absolute -top-2 left-3 bg-slate-800 px-2 rounded">Display Name</span>
+            <input
+              type="text"
+              placeholder="Enter your name"
+              className="w-full h-[52px] outline-none border border-slate-600 bg-slate-800/80 px-5 rounded-xl text-white placeholder-slate-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
+            />
+          </div>
+          
+          <div className="w-full relative mt-2 opacity-70">
+            <span className="text-xs font-semibold text-slate-400 absolute -top-2 left-3 bg-slate-800 px-2 rounded">Username</span>
+            <input
+              type="text"
+              readOnly
+              className="w-full h-[52px] outline-none border border-slate-700 bg-slate-800/50 px-5 rounded-xl text-slate-400 cursor-not-allowed"
+              value={userData?.userName}
+            />
+          </div>
+          
+          <div className="w-full relative mt-2 opacity-70">
+            <span className="text-xs font-semibold text-slate-400 absolute -top-2 left-3 bg-slate-800 px-2 rounded">Email Address</span>
+            <input
+              type="email"
+              readOnly
+              className="w-full h-[52px] outline-none border border-slate-700 bg-slate-800/50 px-5 rounded-xl text-slate-400 cursor-not-allowed"
+              value={userData?.email}
+            />
+          </div>
+          
+          <button
+            className="w-full h-[52px] bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-semibold text-lg mt-6 transition-all duration-300 transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-indigo-600/30"
+            disabled={saving}
+          >
+            {saving ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                <span>Saving...</span>
+              </div>
+            ) : "Save Changes"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
