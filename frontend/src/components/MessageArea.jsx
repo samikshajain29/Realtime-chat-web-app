@@ -13,10 +13,9 @@ import { serverUrl } from "../main";
 import SenderMessage from "./SenderMessage";
 import ReceiverMessage from "./ReceiverMessage";
 import { setMessages } from "../redux/messageSlice";
-import { getSocket } from "../socket/socketService";
 
 function MessageArea() {
-  let { selectedUser, userData, onlineUsers } = useSelector((state) => state.user);
+  let { selectedUser, userData, socket, onlineUsers } = useSelector((state) => state.user);
   let dispatch = useDispatch();
   let [showPicker, setShowPicker] = useState(false);
   let [input, setInput] = useState("");
@@ -67,23 +66,21 @@ function MessageArea() {
     setShowPicker(false);
   };
 
-  // Real-time message listener using module ref (not Redux broken proxy)
+  // Real-time message listener
   useEffect(() => {
-    const socket = getSocket();
     if (!socket) return;
 
     const handleNewMessage = (newMsg) => {
       if (newMsg.sender === selectedUser?._id || newMsg.receiver === selectedUser?._id) {
-        dispatch((_, getState) => {
-          const currentMessages = getState().message.messages;
-          dispatch(setMessages([...currentMessages, newMsg]));
-        });
+        dispatch(setMessages([...messages, newMsg]));
       }
     };
 
     socket.on("newMessage", handleNewMessage);
-    return () => socket.off("newMessage", handleNewMessage);
-  }, [selectedUser, dispatch]);
+    return () => {
+      socket.off("newMessage", handleNewMessage);
+    };
+  }, [socket, messages, selectedUser, dispatch]);
 
   const isOnline = onlineUsers?.includes(selectedUser?._id);
 

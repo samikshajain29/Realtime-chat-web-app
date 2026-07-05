@@ -7,4 +7,8 @@ export const store = configureStore({
     user: userSlice,
     message: messageSlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });

@@ -9,13 +9,12 @@ import Profile from "./pages/Profile";
 import getOtherUsers from "./customHooks/getOtherUsers";
 import { io } from "socket.io-client";
 import { serverUrl } from "./main";
-import { setOnlineUsers } from "./redux/userSlice";
-import { getSocket, setSocketRef } from "./socket/socketService";
+import { setOnlineUsers, setSocket } from "./redux/userSlice";
 
 function App() {
   getCurrentUser();
   getOtherUsers();
-  let { userData } = useSelector((state) => state.user);
+  let { userData, socket } = useSelector((state) => state.user);
   let dispatch = useDispatch();
 
   useEffect(() => {
@@ -25,9 +24,7 @@ function App() {
           userId: userData?._id,
         },
       });
-
-      // Store the raw socket in the module-level ref (NOT in Redux)
-      setSocketRef(socketio);
+      dispatch(setSocket(socketio));
 
       socketio.on("getOnlineUsers", (users) => {
         dispatch(setOnlineUsers(users));
@@ -35,13 +32,11 @@ function App() {
 
       return () => {
         socketio.close();
-        setSocketRef(null);
       };
     } else {
-      const existing = getSocket();
-      if (existing) {
-        existing.close();
-        setSocketRef(null);
+      if (socket) {
+        socket.close();
+        dispatch(setSocket(null));
       }
     }
   }, [userData]);
